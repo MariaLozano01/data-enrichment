@@ -1,21 +1,27 @@
 import pandas as pd
 adi = pd.read_csv('US_2019_ADI_Census Block Group_v3.1.csv.zip')
 adi
-import pandas as pd
-discharges = pd.read_csv('Hospital_Inpatient_Discharges__SPARCS_De-Identified___2015.csv.zip')
+discharges = pd.read_csv('/Users/marialozano/Documents/GitHub/data-enrichment/Hospital_Inpatient_Discharges__SPARCS_De-Identified___2015.csv', on_bad_lines= 'skip', encoding= 'latin1') ##encoding= 'latin1'
 discharges
-
 discharges.columns
 adi.columns
-discharges['Zip Code - 3 digits']
+
+discharges['Facility Id']
 adi['FIPS']
 
-df_adi_small = adi(('Unnamed: 0', 'GISJOIN', 'FIPS', 'ADI_NATRANK', 'ADI_STATERNK'))
-print[df_adi_small.sample(10).to_markdown()] 
+df_adi_small = adi[['Unnamed: 0', 'GISJOIN', 'FIPS', 'ADI_NATRANK', 'ADI_STATERNK']]
+print(df_adi_small.sample(10).to_markdown())
 
-df_discharges_small = discharges(('Health Service Area', 'Hospital County', 'Facility Id', 'Facility Name', 'Zip Code - 3 digits', 'Total Charges', 'Total Costs'))
-print[df_discharges_small.sample(10).to_markdown()] 
+df_discharges_small = discharges[['Hospital County', 'Facility Id', 'Facility Name', 'Zip Code - 3 digits', 'Total Charges', 'Total Costs']]
+print(df_discharges_small.sample(10).to_markdown())
 
-combined_df = pd.merge(df_discharges_small, df_adi_small, how= 'left', left_on= 'FIPS', right_on= 'Zip Code - 3 digits')
+combined_df = pd.merge(df_discharges_small, df_adi_small, how= 'left', left_on= 'FIPS', right_on= 'Facility Id')
+combined_df
 
- 
+combined_df = df_discharges_small.merge(df_adi_small, how= 'left', left_on= 'Facility Id', right_on= 'FIPS')
+combined_df
+
+adi.dtypes
+discharges.dtypes
+
+
